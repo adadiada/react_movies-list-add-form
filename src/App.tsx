@@ -11,6 +11,7 @@ export const App = () => {
   const addMovie = (newMovie: Movie) => {
     setMovies(prev => [...prev, newMovie]);
   };
+
   return (
     <div className="page">
       <div className="page-content">
