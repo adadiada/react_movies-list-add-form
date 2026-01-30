@@ -1,12 +1,12 @@
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { TextField } from '../TextField';
 import { Movie } from '../../types/Movie';
 
 type Props = {
-  addMovie: (m: Movie) => void;
+  onAdd: (m: Movie) => void;
 };
 
-export const NewMovie: React.FC<Props> = ({ addMovie }) => {
+export const NewMovie: React.FC<Props> = ({ onAdd }) => {
   const [title, setTitle] = useState<string>('');
   const [description, setDescription] = useState<string>('');
   const [imgUrl, setImgUrl] = useState<string>('');
@@ -16,16 +16,18 @@ export const NewMovie: React.FC<Props> = ({ addMovie }) => {
   const IsValidUrl = (url: string) => {
     const pattern = // eslint-disable-next-line max-len
       /^((([A-Za-z]{3,9}:(?:\/\/)?)(?:[-;:&=+$,\w]+@)?[A-Za-z0-9.-]+|(?:www\.|[-;:&=+$,\w]+@)[A-Za-z0-9.-]+)((?:\/[+~%/.\w-_]*)?\??(?:[-+=&;%@,.\w_]*)#?(?:[,.!/\\\w]*))?)$/;
+
     return pattern.test(url);
   };
+
   // Increase the count after successful form submission
   // to reset touched status of all the `Field`s
-  const [count] = useState(0);
+  const [count, setCount] = useState(0);
 
   const canSubmit =
     title.trim() !== '' &&
-    imgUrl.trim() !== '' &&
-    imdbUrl.trim() !== '' &&
+    IsValidUrl(imgUrl.trim()) &&
+    IsValidUrl(imdbUrl.trim()) &&
     imdbId.trim() !== '';
 
   const handleSubmit = (event: React.FormEvent) => {
@@ -36,20 +38,20 @@ export const NewMovie: React.FC<Props> = ({ addMovie }) => {
     }
 
     const movieData: Movie = {
-      title,
-      imgUrl,
-      imdbUrl,
-      imdbId,
-      ...(description.trim() && { description }),
+      title: title.trim(),
+      imgUrl: imgUrl.trim(),
+      imdbUrl: imdbUrl.trim(),
+      imdbId: imdbId.trim(),
+      ...(description.trim() && { description: description.trim() }),
     };
 
-  addMovie(movieData);
-  setTitle('');
-  setDescription('');
-  setImgUrl('');
-  setImdbUrl('');
-  setImdbId('');
-
+    onAdd(movieData);
+    setTitle('');
+    setDescription('');
+    setImgUrl('');
+    setImdbUrl('');
+    setImdbId('');
+    setCount(c => c + 1);
   };
 
   return (
