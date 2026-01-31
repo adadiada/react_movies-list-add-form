@@ -25,7 +25,7 @@ export const NewMovie: React.FC<Props> = ({ onAdd }) => {
   const [count, setCount] = useState(0);
 
   const canSubmit =
-    title !== '' && IsValidUrl(imgUrl) && IsValidUrl(imdbUrl) && imdbId !== '';
+    title && IsValidUrl(imgUrl) && IsValidUrl(imdbUrl) && imdbId;
 
   const handleSubmit = (event: React.FormEvent) => {
     event.preventDefault();
